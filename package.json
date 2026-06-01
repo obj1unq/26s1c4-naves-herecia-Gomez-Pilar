@@ -1,7 +1,7 @@
 {
-  "name": "capos",
-  "version": "1.0.0",
-  "wollokVersion": "4.0.0",
-  "author": "leo",
+  "name": "naves",
+  "version": "1.0.3",
+  "wollokVersion": "4.2.3",
+  "author": "isaiaa",
   "license": "ISC"
 }
