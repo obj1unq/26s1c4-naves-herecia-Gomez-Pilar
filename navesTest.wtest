@@ -2,7 +2,7 @@ import naves.*
 
 describe "Nave de carga" {
 
-	const naveVacia = new NaveDeCarga()
+	const naveVacia = new NaveDeCarga(velocidad = 0)
 	const naveLlena = new NaveDeCarga(carga = 500000, velocidad = 290000)
 
 	test "sobrecargada" {
@@ -30,7 +30,7 @@ describe "Nave de carga" {
 
 describe "Nave de pasajeros" {
 
-	const naveSinPasajeros = new NaveDePasajeros()
+	const naveSinPasajeros = new NaveDePasajeros(velocidad = 0)
 	const naveConPasajeros = new NaveDePasajeros(cantidadDePasajeros = 296, velocidad = 290000)
 
 	test "velocidad maxima sin pasajeros" {
@@ -58,8 +58,8 @@ describe "Nave de pasajeros" {
 
 describe "Nave de combate" {
 
-	const naveEnReposo = new NaveDeCombate()
-	const naveEnAtaque = new NaveDeCombate(modo = ataque)
+	const naveEnReposo = new NaveDeCombate(velocidad = 0)
+	const naveEnAtaque = new NaveDeCombate(velocidad = 1000, modo = Ataque)
 
 	test "no esta invisible en reposo" {
 		assert.notThat(naveEnReposo.estaInvisible())
@@ -85,3 +85,43 @@ describe "Nave de combate" {
 	}
 }
 
+describe "Nave con propulcion" {
+	const naveDeCarga = new NaveDeCarga(carga = 0, velocidad = 0)
+	const naveDePasajeros = new NaveDePasajeros(cantidadDePasajeros = 0, velocidad = 290000)
+
+	test "una nave sin velocidad al propulsarse quedan a 20.000km/seg" {
+		naveDeCarga.propulsar()
+		assert.equals(20000, naveDeCarga.velocidad())
+	}
+
+	test "una nave con velocidad existente al propulsarse aumenta su velocidad" {
+		naveDePasajeros.propulsar()
+		assert.equals(300000, naveDePasajeros.velocidad())
+	}
+}
+
+describe "Nave de carga radiactiva" {
+	const naveRadiactiva = new NaveDeCargaRadiactiva(carga = 5000, velocidad = 10000)
+
+	test "recibir amenaza" {
+		naveRadiactiva.recibirAmenaza()
+		assert.equals(0, naveRadiactiva.velocidad())
+		assert.equals(5000, naveRadiactiva.carga())
+	}
+}
+
+describe "Prepararse para viajar" {
+	const naveDePasajeros = new NaveDePasajeros(cantidadDePasajeros = 0, velocidad = 290000)
+	const naveDeResiduos = new NaveDeCargaRadiactiva(carga = 200, velocidad = 0)
+
+	test "Nave de Pasajeros se prepara para viajar" {
+		naveDePasajeros.prepararParaViajar()
+		assert.equals(300000, naveDePasajeros.velocidad())
+	} 
+
+	test "Nave de residuos se prepara para viajar" {
+		naveDeResiduos.prepararParaViajar()
+		assert.equals(15000, naveDeResiduos.velocidad())
+		assert.that(naveDeResiduos.sellada())
+	}
+}
